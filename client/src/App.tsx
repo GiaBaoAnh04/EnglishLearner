@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Ediom from "./pages/Ediom";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import { useAuth } from "./hooks/useAuth";
+import MainLayout from "./layouts/MainLayout";
+import Home from "./pages/Home";
+import IdiomDetail from "./pages/IdiomDetail";
 
-function App() {
+export function App() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Routes có layout chung */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+
+          <Route
+            path="/idiom-detail/:id"
+            element={
+              isAuthenticated ? (
+                <IdiomDetail />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+        </Route>
+
+        {/* Routes không dùng layout */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
