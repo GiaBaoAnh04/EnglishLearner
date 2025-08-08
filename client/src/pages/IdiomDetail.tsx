@@ -3,43 +3,8 @@ import { mockIdiom } from "../dummy/dummyIdioms";
 import { IdiomDetailCard } from "../features/idiom/IdiomDetailCard";
 import { CommentForm } from "../features/comment/CommentForm";
 import { CommentsList } from "../features/comment/CommentList";
-
-interface Comment {
-  id: number;
-  author: string;
-  content: string;
-  createdAt: string;
-  likes: number;
-  userLiked: boolean;
-  replies: Reply[];
-}
-
-interface Idiom {
-  id: number;
-  title: string;
-  meaning: string;
-  example: string;
-  explanation: string;
-  etymology: string;
-  category: string;
-  difficulty: string;
-  votes: number;
-  downvotes: number;
-  userVote: null | "up" | "down";
-  comments: Comment[];
-  createdAt: string;
-  author: string;
-  tags: string[];
-}
-
-interface Reply {
-  id: number;
-  author: string;
-  content: string;
-  createdAt: string;
-  likes: number;
-  userLiked: boolean;
-}
+import { Comment, Reply } from "../types/comment";
+import { Idiom } from "../types/idiom";
 
 const IdiomDetail = () => {
   const [idiom, setIdiom] = useState<Idiom>(mockIdiom);

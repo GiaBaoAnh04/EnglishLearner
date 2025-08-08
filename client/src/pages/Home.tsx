@@ -14,7 +14,6 @@ const Home = () => {
   const [sortBy, setSortBy] = useState("newest");
   const navigate = useNavigate();
 
-  // Thêm hàm này vào component Home
   const handleIdiomClick = (id: number) => {
     navigate(`/idiom-detail/${id}`);
   };
