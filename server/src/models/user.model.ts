@@ -2,7 +2,6 @@ import { Schema, models, model, Document, ObjectId } from "mongoose";
 import { IAudit, AuditSchema } from "./audit.model";
 
 export interface IUser extends Document, IAudit {
-  _id: ObjectId;
   email: string;
   password: string;
   username: string;

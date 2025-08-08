@@ -1,19 +1,9 @@
-// import express from "express";
-// import dotenv from "dotenv";
-// import authRoutes from "./routes/auth.routes";
-
-// dotenv.config();
-
-// const app = express();
-
-// app.use(express.json());
-// app.use("/api/auth", authRoutes);
-
-// export default app;
-
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
+import idiomRoutes from "./routes/idiom.routes";
+import commentRoutes from "./routes/comment.routes";
+import replyRoutes from "./routes/reply.routes";
 import { connectDB } from "./config/db";
 import cors from "cors";
 
@@ -31,6 +21,9 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/idiom", idiomRoutes);
+app.use("/api/comment", commentRoutes);
+app.use("/api/reply", replyRoutes);
 
 // Error handling middleware
 app.use(

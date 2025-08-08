@@ -1,7 +1,6 @@
 import { Schema, models, model, Document, ObjectId } from "mongoose";
 
 export interface IUserVote extends Document {
-  _id: ObjectId;
   userId: ObjectId;
   targetId: ObjectId;
   targetType: "question" | "answer";

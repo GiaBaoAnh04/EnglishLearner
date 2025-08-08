@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt.util";
 import User from "../models/user.model";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: any;
 }
 

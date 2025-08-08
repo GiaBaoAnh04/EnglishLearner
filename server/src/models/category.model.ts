@@ -2,7 +2,6 @@ import { Schema, models, model, Document, ObjectId } from "mongoose";
 import { IAudit, AuditSchema } from "./audit.model";
 
 export interface ICategory extends Document, IAudit {
-  _id: ObjectId;
   name: string;
   description: string;
   icon?: string;

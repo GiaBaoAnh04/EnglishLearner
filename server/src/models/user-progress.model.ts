@@ -1,7 +1,6 @@
 import { Schema, models, model, Document, ObjectId } from "mongoose";
 
 export interface IUserProgress extends Document {
-  _id: ObjectId;
   userId: ObjectId;
   vocabularyId: ObjectId;
   status: "learning" | "mastered" | "review";
