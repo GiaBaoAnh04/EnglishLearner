@@ -52,7 +52,10 @@ export const register = async (
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken({
+      userId: user._id.toString(),
+      email: user.email,
+    });
 
     res.status(201).json({
       success: true,
@@ -68,8 +71,6 @@ export const register = async (
           level: user.level,
           streak: user.streak,
           totalPoints: user.totalPoints,
-          // isActive: user.isActive,
-          // emailVerified: user.emailVerified,
         },
         token,
       },
@@ -82,7 +83,6 @@ export const register = async (
       return res.status(400).json({
         success: false,
         message: "Validation error",
-        // errors: Object.values(error.errors).map((err: any) => err.message),
       });
     }
 
@@ -145,7 +145,10 @@ export const login = async (
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken({
+      userId: user._id.toString(),
+      email: user.email,
+    });
 
     res.json({
       success: true,

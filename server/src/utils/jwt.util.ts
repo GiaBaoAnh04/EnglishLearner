@@ -1,17 +1,30 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key"; // nhớ đặt trong .env
+const JWT_SECRET: string = process.env.JWT_SECRET || "default_secret_key";
 
-const EXPIRES_IN = "7d";
+export interface JWTPayload {
+  userId: string;
+  email: string;
+  [key: string]: any;
+}
 
-export const generateToken = (payload: object): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: EXPIRES_IN });
+export const generateToken = (payload: JWTPayload): string => {
+  // Kiểm tra và đảm bảo payload là object hợp lệ
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Payload must be a valid object");
+  }
+
+  const options: SignOptions = {
+    expiresIn: "7d", // Hard-code string thay vì dùng env variable
+  };
+
+  return jwt.sign(payload, JWT_SECRET, options);
 };
 
-export const verifyToken = (token: string): any | null => {
+export const verifyToken = (token: string): JWTPayload => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, JWT_SECRET) as JWTPayload;
   } catch (error) {
-    return null;
+    throw new Error("Invalid token");
   }
 };
