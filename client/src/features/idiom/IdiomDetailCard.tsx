@@ -124,8 +124,10 @@ export const IdiomDetailCard = ({
       </div>
 
       {/* Vote and stats */}
-      <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-        <div className="flex items-center gap-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-6 border-t border-gray-200 gap-4 sm:gap-0">
+        {/* Phần vote và comment count */}
+        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-4 xs:gap-6 w-full sm:w-auto">
+          {/* Vote buttons */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => onVote("up")}
@@ -151,13 +153,15 @@ export const IdiomDetailCard = ({
             </button>
           </div>
 
+          {/* Comment count */}
           <div className="flex items-center gap-1 text-gray-600">
             <MessageCircle className="w-4 h-4" />
             <span>{idiom.comments.length} comments</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        {/* Phần tác giả và ngày tạo */}
+        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 xs:gap-4 text-sm text-gray-500 w-full sm:w-auto">
           <div className="flex items-center gap-1">
             <User className="w-4 h-4" />
             <span>by {idiom.author}</span>
