@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import { authApi, LoginData } from "../api/authApi";
 
 const FloatingLabelInput = ({
   id,
@@ -17,11 +17,6 @@ const FloatingLabelInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => {
-    if (value === "") setIsFocused(false);
-  };
-
   return (
     <div className="relative mb-6">
       <input
@@ -29,9 +24,11 @@ const FloatingLabelInput = ({
         id={id}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        className={`text-dark100_light500 w-full border-b-2 bg-transparent p-3 transition-all duration-200 pt-5 rounded-[10px]`}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => {
+          if (value === "") setIsFocused(false);
+        }}
+        className="text-dark100_light500 w-full border-b-2 bg-transparent p-3 pt-5 rounded-[10px]"
         placeholder=" "
         required
       />
@@ -50,7 +47,7 @@ const FloatingLabelInput = ({
 };
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState(""); // đổi từ username -> email
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -59,12 +56,17 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    if (username && password) {
-      localStorage.setItem("token", "fake-token");
-      localStorage.setItem("user", JSON.stringify({ username }));
-      navigate("/");
-    } else {
-      setError("Vui lòng nhập đầy đủ thông tin.");
+    try {
+      const res = await authApi.login({ email, password } as LoginData);
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        navigate("/");
+      } else {
+        setError(res.data.message || "Đăng nhập thất bại.");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Lỗi kết nối server.");
     }
   };
 
@@ -85,11 +87,11 @@ const Login = () => {
 
         <form className="mt-[74px]" onSubmit={handleSubmit}>
           <FloatingLabelInput
-            id="username"
-            label="Tên đăng nhập hoặc Email"
-            type="text"
-            value={username}
-            setValue={setUsername}
+            id="email"
+            label="Email"
+            type="email"
+            value={email}
+            setValue={setEmail}
           />
           <FloatingLabelInput
             id="password"

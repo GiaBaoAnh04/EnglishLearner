@@ -1,7 +1,7 @@
 import { Comment } from "./comment";
 
 export interface Idiom {
-  id: number;
+  _id: string;
   title: string;
   meaning: string;
   example: string;

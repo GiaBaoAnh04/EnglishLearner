@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { authApi, RegisterData } from "../api/authApi"; // import API
+
 interface FloatingLabelInputProps {
   id: string;
   label: string;
@@ -27,9 +29,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
         onBlur={() => {
           if (!value) setIsFocused(false);
         }}
-        className={`text-dark100_light500 w-full border-b-2 bg-transparent p-2 transition-all duration-200 focus:outline-none ${
-          isFocused || value ? "pt-5" : "pt-5"
-        }`}
+        className="text-dark100_light500 w-full border-b-2 bg-transparent p-2 pt-5 focus:outline-none"
         placeholder=" "
         required
       />
@@ -68,44 +68,42 @@ const SignUp: React.FC = () => {
     }
 
     setErrorMessage("");
+    setSuccessMessage("");
 
-    // const userData = {
-    //   username,
-    //   fullname: fullName,
-    //   numberphone: phoneNumber,
-    //   email,
-    //   birthday,
-    //   gender,
-    //   password,
-    //   confirmPassword,
-    //   avatar: null,
-    //   background: null,
-    //   address: null,
-    //   job: null,
-    //   hobbies: [],
-    //   bio: null,
-    //   nickName: null,
-    //   friends: [],
-    //   bestFriends: [],
-    //   following: [],
-    //   block: [],
-    //   isAdmin: false,
-    // };
+    const payload: RegisterData = {
+      email,
+      password,
+      username,
+      fullName,
+    };
 
-    // COMMENT API CALL
-    /*
+    if (!username || username.length < 3) {
+      setErrorMessage("Username phải có ít nhất 3 ký tự");
+      return;
+    }
+
+    if (!fullName) {
+      setErrorMessage("Full name không được để trống");
+      return;
+    }
+
+    if (!email.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)) {
+      setErrorMessage("Email không hợp lệ");
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage("Mật khẩu phải có ít nhất 6 ký tự");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      console.log(payload, "payload");
 
-      const data = await response.json();
+      const res = await authApi.register(payload);
 
-      if (response.ok) {
+      if (res.data.success) {
         setSuccessMessage("Đăng ký thành công! Vui lòng đăng nhập.");
-        // Reset form
         setUsername("");
         setFullName("");
         setEmail("");
@@ -115,18 +113,16 @@ const SignUp: React.FC = () => {
         setPassword("");
         setConfirmPassword("");
       } else {
-        setErrorMessage(data.message || "Đăng ký thất bại!");
+        setErrorMessage(res.data.message || "Đăng ký thất bại!");
       }
-    } catch (error) {
-      console.error("Lỗi đăng ký:", error);
-      setErrorMessage("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    } catch (err: any) {
+      setErrorMessage(err.response?.data?.message || "Lỗi kết nối server.");
     }
-    */
   };
 
   return (
     <div
-      className="background-light800_dark400 flex h-screen w-full items-center justify-center bg-cover bg-center "
+      className="background-light800_dark400 flex h-screen w-full items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
           "url('https://i.pinimg.com/1200x/6f/12/bd/6f12bd3e987161047b6d78bf0bfb3081.jpg')",
@@ -190,7 +186,6 @@ const SignUp: React.FC = () => {
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
                 className="text-dark100_light500 w-full border-b-2 bg-transparent p-2 focus:outline-none"
-                required
               />
             </div>
             <div className="ml-2 w-full">
@@ -205,7 +200,6 @@ const SignUp: React.FC = () => {
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 className="text-light-500 w-full border-b-2 bg-transparent p-2 focus:outline-none"
-                required
               >
                 <option value="" disabled>
                   Select your gender

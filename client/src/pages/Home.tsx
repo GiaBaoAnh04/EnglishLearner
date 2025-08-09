@@ -1,26 +1,40 @@
 import { useState, useEffect } from "react";
-import { categories, difficulties, dummyIdioms } from "../dummy/dummyIdioms";
+import { difficulties } from "../dummy/dummyIdioms"; // vẫn có thể giữ difficulties mock
 import Header from "../features/home/Header";
 import { SearchBar } from "../component/search-bar/search-bar";
 import { SelectInput } from "../component/select-input/select-input";
 import { IdiomCard } from "../features/home/EdiomCard";
 import { useNavigate } from "react-router-dom";
+import { idiomApi } from "../api/idiomApi";
 
 const Home = () => {
-  const [idioms, setIdioms] = useState(dummyIdioms);
+  const [idioms, setIdioms] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
   const navigate = useNavigate();
 
-  const handleIdiomClick = (id: number) => {
+  const handleIdiomClick = (id: string) => {
     navigate(`/idiom-detail/${id}`);
   };
 
-  // Filter and sort idioms
   useEffect(() => {
-    let filtered = dummyIdioms.filter((idiom) => {
+    // Gọi API lấy idioms
+    idiomApi.getAllIdioms().then((res) => {
+      setIdioms(res.data); // tùy backend trả
+    });
+
+    // Gọi API lấy categories
+    idiomApi.getAllCategories().then((res) => {
+      setCategories(["All", ...res.data.data]); // thêm "All" vào đầu
+    });
+  }, []);
+
+  // Filter và sort (trên data thật)
+  const filteredIdioms = idioms
+    .filter((idiom) => {
       const matchesSearch =
         idiom.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         idiom.meaning.toLowerCase().includes(searchTerm.toLowerCase());
@@ -28,48 +42,39 @@ const Home = () => {
         selectedCategory === "All" || idiom.category === selectedCategory;
       const matchesDifficulty =
         selectedDifficulty === "All" || idiom.difficulty === selectedDifficulty;
-
       return matchesSearch && matchesCategory && matchesDifficulty;
-    });
-
-    // Sort
-    filtered.sort((a, b) => {
+    })
+    .sort((a, b) => {
       switch (sortBy) {
         case "newest":
           return (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         case "popular":
-          return b.votes - a.votes;
+          return b.votes.length - a.votes.length;
         case "mostCommented":
-          return b.comments - a.comments;
+          return b.comments.length - a.comments.length;
         default:
           return 0;
       }
     });
 
-    setIdioms(filtered);
-  }, [searchTerm, selectedCategory, selectedDifficulty, sortBy]);
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      {/* Search and Filters */}
       <div className="container mx-auto px-4 -mt-8 relative z-10">
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <SearchBar
               placeholder="Search idioms..."
               value={searchTerm}
-              onChange={(value) => setSearchTerm(value)}
+              onChange={setSearchTerm}
               fullWidth
               clearable
               dropdownVisible={false}
               inputClassName="pl-10"
               containerClassName="flex-1"
             />
-
-            {/* Category Filter */}
             <SelectInput
               value={selectedCategory}
               onChange={(option) =>
@@ -83,8 +88,6 @@ const Home = () => {
               arrow
               clearable
             />
-
-            {/* Difficulty Filter */}
             <SelectInput
               value={selectedDifficulty}
               onChange={(option) =>
@@ -96,11 +99,7 @@ const Home = () => {
               }))}
               placeholder="Select difficulty"
               className="min-w-[180px]"
-              inputClassName="border-gray-300 focus:ring-2 focus:ring-blue-500"
-              dropdownClassName="border-gray-300 shadow-lg"
             />
-
-            {/* Sort */}
             <SelectInput
               value={sortBy}
               onChange={(option) =>
@@ -113,27 +112,22 @@ const Home = () => {
               ]}
               placeholder="Sort by"
               className="min-w-[180px]"
-              inputClassName="border-gray-300 focus:ring-2 focus:ring-blue-500"
-              dropdownClassName="border-gray-300 shadow-lg"
             />
           </div>
         </div>
       </div>
-
-      {/* Idioms Grid */}
       <div className="container mx-auto px-4 pb-12">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {idioms.map((idiom) => (
+          {filteredIdioms.map((idiom) => (
             <IdiomCard
-              key={idiom.id}
+              key={idiom._id}
               idiom={idiom}
-              className="hover:shadow-md" // Có thể thêm class tùy chỉnh
-              onClick={handleIdiomClick} // Optional: có thể bỏ qua để dùng navigate mặc định
+              className="hover:shadow-md"
+              onClick={() => handleIdiomClick(idiom._id)}
             />
           ))}
         </div>
-
-        {idioms.length === 0 && (
+        {filteredIdioms.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg mb-4">No idioms found</div>
             <p className="text-gray-400">

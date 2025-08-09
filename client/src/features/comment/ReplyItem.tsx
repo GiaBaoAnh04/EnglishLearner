@@ -31,7 +31,7 @@ export const ReplyItem = memo(({ reply, onLike }: ReplyItemProps) => {
           } hover:text-blue-600`}
         >
           <ThumbsUp className="w-3 h-3" />
-          {reply.likes}
+          {reply.likes.length}
         </button>
       </div>
     </div>

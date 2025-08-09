@@ -3,7 +3,7 @@ export interface Reply {
   author: string;
   content: string;
   createdAt: string;
-  likes: number;
+  likes: any;
   userLiked: boolean;
 }
 
@@ -12,7 +12,7 @@ export interface Comment {
   author: string;
   content: string;
   createdAt: string;
-  likes: number;
+  likes: any;
   userLiked: boolean;
   replies: Reply[];
 }

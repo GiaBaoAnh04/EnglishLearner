@@ -12,7 +12,7 @@ import { getDifficultyColor, formatDate } from "../../utils/utils";
 
 interface IdiomDetailCardProps {
   idiom: {
-    id: number;
+    _id: string;
     title: string;
     meaning: string;
     example: string;
@@ -29,6 +29,7 @@ interface IdiomDetailCardProps {
     tags: string[];
   };
   isBookmarked: boolean;
+  totalComments: number;
   onBookmarkToggle: () => void;
   onVote: (voteType: "up" | "down") => void;
 }
@@ -38,6 +39,7 @@ export const IdiomDetailCard = ({
   isBookmarked,
   onBookmarkToggle,
   onVote,
+  totalComments,
 }: IdiomDetailCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
@@ -156,7 +158,7 @@ export const IdiomDetailCard = ({
           {/* Comment count */}
           <div className="flex items-center gap-1 text-gray-600">
             <MessageCircle className="w-4 h-4" />
-            <span>{idiom.comments.length} comments</span>
+            <span>{totalComments} comments</span>
           </div>
         </div>
 

@@ -41,7 +41,7 @@ export const CommentItem = memo(
                 } hover:text-blue-600`}
               >
                 <ThumbsUp className="w-3 h-3" />
-                {comment.likes}
+                {comment.likes.length}
               </button>
               <button
                 onClick={() => setIsReplying(!isReplying)}

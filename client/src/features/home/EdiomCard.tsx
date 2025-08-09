@@ -10,10 +10,10 @@ interface Idiom {
   example: string;
   explanation: string;
   difficulty: string;
-  votes: number;
-  comments: number;
+  votes: any;
+  comments: any;
   createdAt: string;
-  author: string;
+  author: any;
   category: string;
 }
 
@@ -69,11 +69,11 @@ export const IdiomCard = ({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <ThumbsUp className="w-4 h-4" />
-              <span>{idiom.votes}</span>
+              <span>{idiom.votes.length}</span>
             </div>
             <div className="flex items-center gap-1">
               <MessageCircle className="w-4 h-4" />
-              <span>{idiom.comments}</span>
+              <span>{idiom.comments.length}</span>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -84,7 +84,9 @@ export const IdiomCard = ({
 
         <div className="mt-3 pt-3 border-t border-gray-200">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">by {idiom.author}</span>
+            <span className="text-sm text-gray-600">
+              by {idiom.author?.fullName}
+            </span>
             <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
               {idiom.category}
             </span>
