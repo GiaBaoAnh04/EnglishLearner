@@ -8,6 +8,7 @@ import {
   dislikeIdiom,
   likeIdiom,
   voteIdiom,
+  getAllCategories,
 } from "../controllers/idiom.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
@@ -15,6 +16,7 @@ const router = Router();
 
 router.get("/", getAllIdioms);
 router.post("/", createIdiom);
+router.get("/category", getAllCategories);
 router.get("/:id", getIdiomById);
 router.put("/:id", updateIdiom);
 router.delete("/:id", deleteIdiom);

@@ -45,7 +45,7 @@ export const createIdiom = async (req: Request, res: Response) => {
 
 export const getAllIdioms = async (_req: Request, res: Response) => {
   try {
-    const idioms = await Idiom.find().populate("author", "name email");
+    const idioms = await Idiom.find().populate("author", "fullName email");
     res.json(idioms);
   } catch (err) {
     res.status(500).json({ error: "Failed to get idioms" });
@@ -351,5 +351,26 @@ export const voteIdiom = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error("Error voting idiom:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllCategories = async (req: Request, res: Response) => {
+  try {
+    // Lấy danh sách category duy nhất
+    const categories = await Idiom.distinct("category", {
+      category: { $ne: null },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Fetched categories successfully",
+      data: categories,
+    });
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching categories",
+    });
   }
 };

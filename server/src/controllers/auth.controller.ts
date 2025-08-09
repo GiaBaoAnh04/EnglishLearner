@@ -20,6 +20,19 @@ export const register = async (
   try {
     const { email, password, username, fullName } = req.body;
 
+    if (!email || !password || !username || !fullName) {
+      return res.status(400).json({
+        success: false,
+        message: "All required fields must be provided",
+      });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Password too short" });
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
@@ -77,14 +90,6 @@ export const register = async (
     });
   } catch (error: any) {
     console.error("Register error:", error);
-
-    // Handle mongoose validation errors
-    if (error.name === "ValidationError") {
-      return res.status(400).json({
-        success: false,
-        message: "Validation error",
-      });
-    }
 
     res.status(500).json({
       success: false,
