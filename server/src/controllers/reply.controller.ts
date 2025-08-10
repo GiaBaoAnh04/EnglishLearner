@@ -93,3 +93,50 @@ export const voteReply = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
+// Sửa reply
+export const updateReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { replyId } = req.params;
+    const { content } = req.body;
+
+    const reply = await Reply.findById(replyId);
+    if (!reply) return res.status(404).json({ message: "Reply not found" });
+
+    if (reply.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    reply.content = content;
+    await reply.save();
+
+    res.json(reply);
+  } catch (error) {
+    console.error("Error updating reply:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Xoá reply
+export const deleteReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { replyId } = req.params;
+
+    const reply = await Reply.findById(replyId);
+    if (!reply) return res.status(404).json({ message: "Reply not found" });
+
+    if (reply.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    await Comment.findByIdAndUpdate(reply.comment, {
+      $pull: { replies: reply._id },
+    });
+
+    await reply.deleteOne();
+    res.json({ message: "Reply deleted" });
+  } catch (error) {
+    console.error("Error deleting reply:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

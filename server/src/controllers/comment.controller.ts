@@ -98,3 +98,54 @@ export const voteComment = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Sửa comment
+export const updateComment = async (req: AuthRequest, res: Response) => {
+  try {
+    const { commentId } = req.params;
+    const { content } = req.body;
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    // Chỉ cho phép user tạo comment mới được sửa
+    if (comment.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    comment.content = content;
+    await comment.save();
+
+    res.json(comment);
+  } catch (error) {
+    console.error("Error update comment:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Xóa comment
+export const deleteComment = async (req: AuthRequest, res: Response) => {
+  try {
+    const { commentId } = req.params;
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    if (comment.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // Xóa reference trong Idiom
+    await Idiom.findByIdAndUpdate(comment.idiom, {
+      $pull: { comments: comment._id },
+    });
+
+    // Xóa comment
+    await comment.deleteOne();
+
+    res.json({ message: "Comment deleted" });
+  } catch (error) {
+    console.error("Error delete comment:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
