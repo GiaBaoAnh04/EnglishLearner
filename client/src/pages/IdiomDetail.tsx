@@ -415,7 +415,10 @@ const IdiomDetail = () => {
         votes: upvotes,
         downvotes: downvotes,
         userVote: null,
-        author: data.author?.username || "Unknown",
+        author: {
+          id: data.author?._id || "",
+          username: data.author?.username || "Unknown",
+        },
         comments,
         createdAt: data.createdAt || new Date().toISOString(),
         tags: data.tags || [],

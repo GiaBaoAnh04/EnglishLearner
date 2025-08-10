@@ -61,9 +61,9 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header totalIdiom={idioms.length} />
       <div className="container mx-auto px-4 -mt-8 relative z-10">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <SearchBar
               placeholder="Search idioms..."

@@ -14,6 +14,6 @@ export interface Idiom {
   userVote: null | "up" | "down";
   comments: Comment[];
   createdAt: string;
-  author: string;
+  author: any;
   tags: string[];
 }

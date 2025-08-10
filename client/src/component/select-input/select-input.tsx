@@ -224,7 +224,7 @@ export function SelectInput<T extends OptionValue, M extends boolean = false>({
       <input
         id={id}
         name={name}
-        className="bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 w-full"
+        className="bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 w-full "
         placeholder={placeholder}
         disabled={disabled || !filterable || readOnly}
         value={
@@ -251,7 +251,7 @@ export function SelectInput<T extends OptionValue, M extends boolean = false>({
     <div
       className={`${
         fullWidth ? "w-full" : ""
-      } flex flex-col gap-1 ${className}`}
+      } flex flex-col gap-1  ${className}`}
     >
       {label && (
         <label
@@ -264,7 +264,7 @@ export function SelectInput<T extends OptionValue, M extends boolean = false>({
 
       <div ref={inputRef} className="relative">
         <div
-          className={`relative flex items-center justify-between border border-gray-300 rounded-md cursor-pointer ${getSizeClasses()} ${
+          className={`relative flex items-center justify-between border border-gray-300 rounded cursor-pointer ${getSizeClasses()} ${
             disabled ? "opacity-50 cursor-not-allowed" : ""
           } ${inputClassName}`}
           onClick={() => !disabled && !readOnly && setOpen((prev) => !prev)}

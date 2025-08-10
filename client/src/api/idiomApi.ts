@@ -15,4 +15,18 @@ export const idiomApi = {
         },
       }
     ),
+
+  updateIdiom: (idiomId: string, data: any, token: string) =>
+    axiosClient.put(`/idiom/${idiomId}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+
+  deleteIdiom: (idiomId: string, token: string) =>
+    axiosClient.delete(`/idiom/${idiomId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
 };
