@@ -24,6 +24,15 @@ export const ReplyItem = memo(({ reply, onLike }: ReplyItemProps) => {
           </span>
         </div>
         <p className="text-gray-700 text-sm mb-2">{reply.content}</p>
+        {/* <button
+          onClick={onLike}
+          className={`flex items-center gap-1 text-xs ${
+            reply.userLiked ? "text-blue-600" : "text-gray-500"
+          } hover:text-blue-600`}
+        >
+          <ThumbsUp className="w-3 h-3" />
+          {reply.likes.length}
+        </button> */}
         <button
           onClick={onLike}
           className={`flex items-center gap-1 text-xs ${

@@ -1,5 +1,5 @@
 export interface Reply {
-  id: number;
+  id: string;
   author: string;
   content: string;
   createdAt: string;
@@ -8,7 +8,7 @@ export interface Reply {
 }
 
 export interface Comment {
-  id: number;
+  id: string;
   author: string;
   content: string;
   createdAt: string;

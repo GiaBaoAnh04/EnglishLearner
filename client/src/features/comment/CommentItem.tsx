@@ -7,9 +7,9 @@ import { CommentForm } from "./CommentForm";
 
 interface CommentItemProps {
   comment: Comment;
-  onLike: (commentId: number) => void;
-  onReplySubmit: (commentId: number, replyText: string) => void;
-  onLikeReply: (replyId: number, parentId: number) => void;
+  onLike: (commentId: string) => void;
+  onReplySubmit: (commentId: string, replyText: string) => void;
+  onLikeReply: (replyId: string, parentId: string) => void;
 }
 
 export const CommentItem = memo(

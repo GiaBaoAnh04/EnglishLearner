@@ -3,6 +3,9 @@ import { useState } from "react";
 
 interface CommentFormProps {
   onSubmit: (comment: string) => void;
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => void;
   currentUserAvatar?: React.ReactNode;
   placeholder?: string;
   buttonText?: string;
@@ -12,6 +15,7 @@ interface CommentFormProps {
 
 export const CommentForm = ({
   onSubmit,
+  onKeyDown,
   currentUserAvatar = (
     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
       <User className="w-4 h-4 text-white" />
@@ -31,6 +35,16 @@ export const CommentForm = ({
     }
   };
 
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+    if (onKeyDown) onKeyDown(e);
+  };
+
   return (
     <div className="mb-4">
       <div className="flex gap-4">
@@ -42,6 +56,7 @@ export const CommentForm = ({
             placeholder={placeholder}
             className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
+            onKeyDown={handleKeyDown}
           />
           <div className="flex justify-end mt-2 gap-2">
             {onCancel && (

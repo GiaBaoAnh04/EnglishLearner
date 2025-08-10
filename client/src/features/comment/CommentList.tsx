@@ -4,9 +4,9 @@ import { CommentItem } from "./CommentItem";
 
 interface CommentsListProps {
   comments: Comment[];
-  onLikeComment: (commentId: number) => void;
-  onReplySubmit: (commentId: number, replyText: string) => void;
-  onLikeReply: (replyId: number, parentId: number) => void;
+  onLikeComment: (commentId: string) => void;
+  onReplySubmit: (commentId: string, replyText: string) => void;
+  onLikeReply: (replyId: string, parentId: string) => void;
 }
 
 export const CommentsList = memo(

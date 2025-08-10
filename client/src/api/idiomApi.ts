@@ -5,13 +5,14 @@ export const idiomApi = {
   getAllIdioms: () => axiosClient.get("/idiom"),
   getAllCategories: () => axiosClient.get("/idiom/category"),
 
-  voteIdiom: (idiomId: string, voteType: "up" | "down", token: string) => {
-    return axiosClient.post(
+  voteIdiom: (idiomId: string, voteType: "up" | "down", token: string) =>
+    axiosClient.post(
       `/idiom/${idiomId}/vote`,
       { voteType },
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    );
-  },
+    ),
 };
