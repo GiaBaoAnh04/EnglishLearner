@@ -52,13 +52,76 @@ export const getAllIdioms = async (_req: Request, res: Response) => {
   }
 };
 
+// export const updateIdiom = async (req: Request, res: Response) => {
+//   try {
+//     const updated = await Idiom.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//     });
+//     if (!updated) return res.status(404).json({ message: "Idiom not found" });
+//     res.json(updated);
+//   } catch (err) {
+//     res.status(500).json({ error: "Failed to update idiom" });
+//   }
+// };
+
 export const updateIdiom = async (req: Request, res: Response) => {
   try {
-    const updated = await Idiom.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+    const allowedFieldKeys = [
+      "title",
+      "meaning",
+      "example",
+      "explanation",
+      "etymology",
+      "category",
+      "difficulty",
+      "tags",
+    ];
+
+    const allowedFields: { [key: string]: any } = {};
+
+    allowedFieldKeys.forEach((key) => {
+      if (req.body[key] !== undefined) {
+        allowedFields[key] = req.body[key];
+      }
     });
+
+    const updated = await Idiom.findByIdAndUpdate(
+      req.params.id,
+      allowedFields,
+      { new: true }
+    )
+      .populate("author", "username")
+      .populate("comments");
+
     if (!updated) return res.status(404).json({ message: "Idiom not found" });
-    res.json(updated);
+
+    // Transform data to match frontend interface
+    const upVotes = updated.votes.filter(
+      (vote: any) => vote.voteType === "up"
+    ).length;
+    const downVotes = updated.votes.filter(
+      (vote: any) => vote.voteType === "down"
+    ).length;
+
+    const responseData = {
+      _id: updated._id,
+      title: updated.title,
+      meaning: updated.meaning,
+      example: updated.example,
+      explanation: updated.explanation,
+      etymology: updated.etymology,
+      category: updated.category,
+      difficulty: updated.difficulty,
+      votes: upVotes,
+      downvotes: downVotes,
+      userVote: null, // Let frontend determine this
+      comments: updated.comments,
+      createdAt: updated.createdAt,
+      author: updated.author,
+      tags: updated.tags,
+    };
+
+    res.json({ data: responseData });
   } catch (err) {
     res.status(500).json({ error: "Failed to update idiom" });
   }
