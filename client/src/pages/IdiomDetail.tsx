@@ -468,6 +468,54 @@ const IdiomDetail = () => {
               onLikeReply={(replyId, parentId) =>
                 handleLikeComment(replyId, true, parentId)
               }
+              onUpdated={(updatedComment) => {
+                setIdiom((prev) => {
+                  if (!prev) return prev;
+                  return {
+                    ...prev,
+                    comments: prev.comments.map((c) =>
+                      c.id === updatedComment.id ? updatedComment : c
+                    ),
+                  };
+                });
+              }}
+              onDeleted={(deletedId) => {
+                setIdiom((prev) => {
+                  if (!prev) return prev;
+                  return {
+                    ...prev,
+                    comments: prev.comments.filter((c) => c.id !== deletedId),
+                  };
+                });
+              }}
+              onEditReply={(replyId, newContent, parentId) => {
+                setIdiom((prev) => ({
+                  ...prev!,
+                  comments: prev!.comments.map((c) =>
+                    c.id === parentId
+                      ? {
+                          ...c,
+                          replies: c.replies.map((r) =>
+                            r.id === replyId ? { ...r, content: newContent } : r
+                          ),
+                        }
+                      : c
+                  ),
+                }));
+              }}
+              onDeleteReply={(replyId, parentId) => {
+                setIdiom((prev) => ({
+                  ...prev!,
+                  comments: prev!.comments.map((c) =>
+                    c.id === parentId
+                      ? {
+                          ...c,
+                          replies: c.replies.filter((r) => r.id !== replyId),
+                        }
+                      : c
+                  ),
+                }));
+              }}
             />
           </div>
         </div>

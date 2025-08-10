@@ -7,6 +7,10 @@ interface CommentsListProps {
   onLikeComment: (commentId: string) => void;
   onReplySubmit: (commentId: string, replyText: string) => void;
   onLikeReply: (replyId: string, parentId: string) => void;
+  onUpdated: (updated: Comment) => void;
+  onDeleted: (commentId: string) => void;
+  onEditReply: (replyId: string, newContent: string, parentId: string) => void; // thêm
+  onDeleteReply: (replyId: string, parentId: string) => void; // thêm
 }
 
 export const CommentsList = memo(
@@ -15,6 +19,10 @@ export const CommentsList = memo(
     onLikeComment,
     onReplySubmit,
     onLikeReply,
+    onUpdated,
+    onDeleted,
+    onEditReply,
+    onDeleteReply,
   }: CommentsListProps) => {
     return (
       <div className="space-y-6">
@@ -25,6 +33,10 @@ export const CommentsList = memo(
             onLike={onLikeComment}
             onReplySubmit={onReplySubmit}
             onLikeReply={onLikeReply}
+            onUpdated={onUpdated}
+            onDeleted={onDeleted}
+            onEditReply={onEditReply} // thêm
+            onDeleteReply={onDeleteReply} // thêm
           />
         ))}
       </div>

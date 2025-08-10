@@ -8,12 +8,6 @@ const Navbar = () => {
         Community Idioms
       </Link>
       <div className="space-x-4 text-light-500">
-        <Link to="/" className="hover:underline">
-          Home
-        </Link>
-        <Link to="/idioms" className="hover:underline">
-          Idioms
-        </Link>
         <Link to="/login" className="hover:underline">
           Login
         </Link>

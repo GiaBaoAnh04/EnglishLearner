@@ -30,3 +30,35 @@ export const createReplyApi = async (
   });
   return response.data;
 };
+
+/* ----- API Edit Reply ----- */
+export const updateReplyApi = async (
+  replyId: string,
+  content: string,
+  token: string
+): Promise<CreateReplyResponse> => {
+  const response = await axios.put(
+    `${API_BASE_URL}/reply/${replyId}`,
+    { content },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data;
+};
+
+/* ----- API Delete Reply ----- */
+export const deleteReplyApi = async (
+  replyId: string,
+  token: string
+): Promise<{ success: boolean; message: string }> => {
+  const response = await axios.delete(`${API_BASE_URL}/reply/${replyId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

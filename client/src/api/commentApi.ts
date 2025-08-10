@@ -94,3 +94,13 @@ export const commentApi: CommentApi = {
       }
     ),
 };
+
+export const updateComment = async (commentId: string, content: string) => {
+  const res = await axiosClient.put(`/comment/${commentId}`, { content });
+  return res.data;
+};
+
+export const deleteComment = async (commentId: string) => {
+  const res = await axiosClient.delete(`/comment/${commentId}`);
+  return res.data;
+};
