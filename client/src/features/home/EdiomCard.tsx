@@ -2,25 +2,12 @@
 import { Clock, MessageCircle, ThumbsUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getDifficultyColor, formatDate } from "../../utils/utils";
-
-interface Idiom {
-  id: number;
-  title: string;
-  meaning: string;
-  example: string;
-  explanation: string;
-  difficulty: string;
-  votes: any;
-  comments: any;
-  createdAt: string;
-  author: any;
-  category: string;
-}
+import { Idiom } from "../../types/idiom";
 
 interface IdiomCardProps {
   idiom: Idiom;
   className?: string;
-  onClick?: (id: number) => void;
+  onClick?: (id: string) => void;
 }
 
 export const IdiomCard = ({
@@ -31,7 +18,7 @@ export const IdiomCard = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    onClick ? onClick(idiom.id) : navigate(`/idiom-detail/${idiom.id}`);
+    onClick ? onClick(idiom._id) : navigate(`/idiom-detail/${idiom._id}`);
   };
 
   return (

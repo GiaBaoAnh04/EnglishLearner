@@ -9,11 +9,22 @@ export interface Idiom {
   etymology: string;
   category: string;
   difficulty: string;
-  votes: number;
+  votes: any;
   downvotes: number;
   userVote: null | "up" | "down";
   comments: Comment[];
   createdAt: string;
   author: any;
+  tags: string[];
+}
+
+export interface NewIdiomData {
+  title: string;
+  meaning: string;
+  example: string;
+  explanation: string;
+  etymology: string;
+  category: string;
+  difficulty: string;
   tags: string[];
 }
