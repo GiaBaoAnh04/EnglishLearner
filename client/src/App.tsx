@@ -10,6 +10,7 @@ import { useAuth } from "./hooks/useAuth";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import IdiomDetail from "./pages/IdiomDetail";
+import Personal from "./pages/Personal";
 
 export function App() {
   const { isAuthenticated } = useAuth();
@@ -20,6 +21,7 @@ export function App() {
         {/* Routes có layout chung */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/personal" element={<Personal />} />
 
           <Route
             path="/idiom-detail/:id"

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { formatDate, getDifficultyColor } from "../../utils/utils";
 import { Idiom } from "../../types/idiom";
+import { userApi } from "../../api/userApi";
 
 interface IdiomDetailCardProps {
   idiom: Idiom;
@@ -106,36 +107,53 @@ export const IdiomDetailCard = ({
             </div>
           </div>
 
-          {isAuthor && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onBookmarkToggle}
-                className={`p-2 rounded-lg border ${
-                  isBookmarked
-                    ? "bg-yellow-50 border-yellow-200 text-yellow-600"
-                    : "bg-white border-gray-200 text-gray-600"
-                } hover:bg-yellow-50`}
-              >
-                <Star
-                  className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`}
-                />
-              </button>
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={async () => {
+                try {
+                  if (isBookmarked) {
+                    await userApi.removeFromFavourites(
+                      currentIdiom._id,
+                      token!
+                    );
+                  } else {
+                    await userApi.addToFavourites(currentIdiom._id, token!);
+                  }
+                  onBookmarkToggle();
+                } catch (error) {
+                  console.error("Bookmark error:", error);
+                }
+              }}
+              className={`p-2 rounded-lg border ${
+                isBookmarked
+                  ? "bg-yellow-50 border-yellow-200 text-yellow-600"
+                  : "bg-white border-gray-200 text-gray-600"
+              } hover:bg-yellow-50`}
+            >
+              <Star
+                className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`}
+              />
+            </button>
 
-              <button
-                onClick={handleEditClick}
-                className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
-              >
-                <Edit className="w-5 h-5" />
-              </button>
+            {isAuthor && (
+              <>
+                <button
+                  onClick={handleEditClick}
+                  className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                >
+                  <Edit className="w-5 h-5" />
+                </button>
 
-              <button
-                onClick={handleDelete}
-                className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-red-50"
-              >
-                <Trash className="w-5 h-5" />
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={handleDelete}
+                  className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-red-50"
+                >
+                  <Trash className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Meaning */}
