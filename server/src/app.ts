@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.routes";
 import idiomRoutes from "./routes/idiom.routes";
 import commentRoutes from "./routes/comment.routes";
 import replyRoutes from "./routes/reply.routes";
+import userRoutes from "./routes/user.routes";
 import { connectDB } from "./config/db";
 import cors from "cors";
 
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/idiom", idiomRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/reply", replyRoutes);
+app.use("/api/user", userRoutes);
 
 // Error handling middleware
 app.use(

@@ -3,7 +3,47 @@ import Idiom from "../models/idiom.model";
 import { isValidObjectId } from "mongoose";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
-export const createIdiom = async (req: Request, res: Response) => {
+// export const createIdiom = async (req: Request, res: Response) => {
+//   try {
+//     const {
+//       title,
+//       meaning,
+//       example,
+//       explanation,
+//       etymology,
+//       category,
+//       difficulty,
+//       author,
+//       tags,
+//     } = req.body;
+
+//     // Validate required fields
+//     if (!title || !meaning || !example || !explanation || !author) {
+//       return res.status(400).json({ error: "Missing required fields" });
+//     }
+
+//     const idiom = await Idiom.create({
+//       title,
+//       meaning,
+//       example,
+//       explanation,
+//       etymology,
+//       category,
+//       difficulty,
+//       author,
+//       tags,
+//       votes: [], // Mặc định không có vote khi tạo
+//       comments: [], // Mặc định không có comment khi tạo
+//     });
+
+//     res.status(201).json(idiom);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Failed to create idiom", details: err });
+//   }
+// };
+
+export const createIdiom = async (req: AuthRequest, res: Response) => {
   try {
     const {
       title,
@@ -13,12 +53,11 @@ export const createIdiom = async (req: Request, res: Response) => {
       etymology,
       category,
       difficulty,
-      author,
       tags,
     } = req.body;
 
     // Validate required fields
-    if (!title || !meaning || !example || !explanation || !author) {
+    if (!title || !meaning || !example || !explanation) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -30,11 +69,14 @@ export const createIdiom = async (req: Request, res: Response) => {
       etymology,
       category,
       difficulty,
-      author,
+      author: req.user._id, // Lấy từ token
       tags,
-      votes: [], // Mặc định không có vote khi tạo
-      comments: [], // Mặc định không có comment khi tạo
+      votes: [],
+      comments: [],
     });
+
+    // Populate luôn để trả về thông tin tác giả
+    await idiom.populate("author", "fullName username");
 
     res.status(201).json(idiom);
   } catch (err) {
@@ -434,6 +476,45 @@ export const getAllCategories = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Server error while fetching categories",
+    });
+  }
+};
+
+export const getUserIdioms = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user._id;
+
+    const idioms = await Idiom.find({ author: userId })
+      .populate("author", "fullName username")
+      .sort({ createdAt: -1 });
+
+    // Format data cho frontend
+    const formattedIdioms = idioms.map((idiom) => ({
+      id: idiom._id,
+      title: idiom.title,
+      meaning: idiom.meaning,
+      example: idiom.example,
+      explanation: idiom.explanation,
+      difficulty: idiom.difficulty,
+      category: idiom.category,
+      votes: idiom.votes || [],
+      comments: idiom.comments || [],
+      createdAt: idiom.createdAt,
+      author: {
+        fullName: idiom.author?.fullName || "Unknown",
+      },
+    }));
+
+    res.json({
+      success: true,
+      message: "User idioms retrieved successfully",
+      data: formattedIdioms,
+    });
+  } catch (error) {
+    console.error("Get user idioms error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error getting user idioms",
     });
   }
 };

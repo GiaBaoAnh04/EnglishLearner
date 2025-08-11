@@ -9,14 +9,16 @@ import {
   likeIdiom,
   voteIdiom,
   getAllCategories,
+  getUserIdioms,
 } from "../controllers/idiom.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = Router();
 
 router.get("/", getAllIdioms);
-router.post("/", createIdiom);
+router.post("/", authMiddleware, createIdiom);
 router.get("/category", getAllCategories);
+router.get("/my/idioms", authMiddleware, getUserIdioms);
 router.get("/:id", getIdiomById);
 router.put("/:id", updateIdiom);
 router.delete("/:id", deleteIdiom);
