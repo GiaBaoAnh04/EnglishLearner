@@ -8,15 +8,14 @@
 //     token,
 //   };
 // };
-
+// hooks/useAuth.ts hoặc hooks/useAuth.tsx
 import { useState, useEffect } from "react";
 
 interface User {
-  id: string;
+  _id: string;
   email: string;
   username: string;
   fullName: string;
-  // Thêm các field khác nếu cần
 }
 
 interface AuthState {
@@ -35,7 +34,6 @@ export const useAuth = () => {
   });
 
   useEffect(() => {
-    // Chỉ chạy trên client-side
     const initializeAuth = () => {
       try {
         if (typeof window !== "undefined") {
@@ -50,7 +48,6 @@ export const useAuth = () => {
             loading: false,
           });
         } else {
-          // Server-side: không authenticated
           setAuthState({
             isAuthenticated: false,
             currentUser: null,
@@ -72,7 +69,6 @@ export const useAuth = () => {
     initializeAuth();
   }, []);
 
-  // Function để logout
   const logout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
