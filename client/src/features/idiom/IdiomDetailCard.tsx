@@ -226,7 +226,7 @@ export const IdiomDetailCard = ({
                 }`}
               >
                 <ThumbsUp className="w-4 h-4" />
-                <span className="font-medium">{upVotes}</span>
+                <span className="font-medium">{idiom.votes}</span>
               </button>
               <button
                 onClick={() => onVote("down")}
@@ -237,7 +237,7 @@ export const IdiomDetailCard = ({
                 }`}
               >
                 <ThumbsDown className="w-4 h-4" />
-                <span className="font-medium">{downVotes}</span>
+                <span className="font-medium">{idiom.downvotes}</span>
               </button>
             </div>
 

@@ -10,6 +10,7 @@ import EditProfileForm from "../features/personal/EditProfileForm";
 import IdiomsGrid from "../features/personal/IdiomsGrid";
 import ProfileHeader from "../features/personal/ProfileHeader";
 import ProfileTabs from "../features/personal/ProfileTabs";
+import { useUser } from "../context/userContext";
 
 interface UserProfile {
   _id: string;
@@ -27,7 +28,7 @@ interface UserProfile {
 const PersonalPage = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+  const { user, updateUser } = useUser();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [myIdioms, setMyIdioms] = useState<Idiom[]>([]);
   const [likedIdioms, setLikedIdioms] = useState<Idiom[]>([]);
@@ -48,15 +49,6 @@ const PersonalPage = () => {
     bio: "",
     avatar: "",
   });
-
-  //   const [newIdiom, setNewIdiom] = useState({
-  //     title: "",
-  //     meaning: "",
-  //     example: "",
-  //     explanation: "",
-  //     category: "",
-  //     difficulty: "Beginner",
-  //   });
 
   const [newIdiomData, setNewIdiomData] = useState<NewIdiomData>({
     title: "",
@@ -98,12 +90,16 @@ const PersonalPage = () => {
     if (!token) return;
     try {
       await userApi.updateProfile(editProfile, token);
+
+      // Lấy data từ response (thay vì dùng toàn bộ response)
+
+      updateUser(editProfile);
       setUserProfile((prev) => (prev ? { ...prev, ...editProfile } : null));
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
     }
-  }, [editProfile, token]);
+  }, [editProfile, token, updateUser]);
 
   const handleCreateIdiom = useCallback(async () => {
     if (!token) return;

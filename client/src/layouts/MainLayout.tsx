@@ -1,14 +1,12 @@
+// Updated MainLayout.tsx
 import { Outlet } from "react-router-dom";
-import Navbar from "../component/nav-bar/Navbar";
+import { Navbar } from "../component/nav-bar/Navbar";
 
 const MainLayout = () => {
-  // Lấy thông tin user đã lưu khi đăng nhập
-  const storedUser = localStorage.getItem("user");
-  const currentUser = storedUser ? JSON.parse(storedUser) : null;
-
+  // Không cần lấy từ localStorage nữa, dùng context
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar currentUser={currentUser} />
+      <Navbar /> {/* Không cần truyền currentUser prop nữa */}
       <main className="flex-1 px-6 py-4">
         <Outlet />
       </main>

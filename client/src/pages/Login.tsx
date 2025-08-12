@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi, LoginData } from "../api/authApi";
+import { useUser } from "../context/userContext";
 
 const FloatingLabelInput = ({
   id,
@@ -51,16 +52,27 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { updateUser } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
+    // Lấy updateUser từ context
+
     try {
       const res = await authApi.login({ email, password } as LoginData);
       if (res.data.success) {
+        const userData = res.data.data.user;
+
+        // 1. Lưu token và user vào localStorage
         localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        // 2. Cập nhật state toàn cục bằng updateUser
+        // Đây là bước quan trọng để thông báo cho context biết rằng user đã thay đổi
+        updateUser(userData);
+
         navigate("/");
       } else {
         setError(res.data.message || "Đăng nhập thất bại.");

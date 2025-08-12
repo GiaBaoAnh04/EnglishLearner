@@ -30,13 +30,15 @@ export const ReplyItem = memo(
           <User className="w-3 h-3 text-white" />
         </div>
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-medium text-gray-800">
-              {reply.author}
-            </span>
-            <span className="text-xs text-gray-500">
-              {formatDate(reply.createdAt)}
-            </span>
+          <div className="flex gap-3 ">
+            <div className="flex sm:flex-row flex-col sm:items-center gap-2 mb-1">
+              <span className="text-sm font-medium text-gray-800">
+                {reply.author}
+              </span>
+              <span className="text-xs text-gray-500">
+                {formatDate(reply.createdAt)}
+              </span>
+            </div>
 
             {isCurrentUser && (
               <div className="ml-auto relative">

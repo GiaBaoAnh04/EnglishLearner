@@ -187,7 +187,7 @@ export const CommentItem = memo(
               </div>
             )}
 
-            <div className="mt-4 pl-10 space-y-4">
+            <div className="mt-4 pl-10  space-y-4">
               {comment.replies.map((reply) => (
                 <ReplyItem
                   key={reply.id}
