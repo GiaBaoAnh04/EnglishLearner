@@ -372,60 +372,62 @@ const IdiomDetail = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/idiom/${id}`).then((res) => {
-      const data = res.data as any;
-      const sortedComments = (data.comments || []).sort(
-        (a: Comment, b: Comment) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
+    axios
+      .get(`https://idiom-community.onrender.com/api/idiom/${id}`)
+      .then((res) => {
+        const data = res.data as any;
+        const sortedComments = (data.comments || []).sort(
+          (a: Comment, b: Comment) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
 
-      const comments: Comment[] = (sortedComments || []).map((c: any) => ({
-        id: c._id,
-        author: c.user?.username || "Unknown",
-        content: c.content,
-        createdAt: c.createdAt,
-        likes: c.likes || [],
-        userLiked: false,
-        replies: (c.replies || []).map((r: any) => ({
-          id: r._id,
-          author: r.user?.username || "Unknown",
-          content: r.content,
-          createdAt: r.createdAt,
-          likes: r.likes || [],
+        const comments: Comment[] = (sortedComments || []).map((c: any) => ({
+          id: c._id,
+          author: c.user?.username || "Unknown",
+          content: c.content,
+          createdAt: c.createdAt,
+          likes: c.likes || [],
           userLiked: false,
-        })),
-      }));
+          replies: (c.replies || []).map((r: any) => ({
+            id: r._id,
+            author: r.user?.username || "Unknown",
+            content: r.content,
+            createdAt: r.createdAt,
+            likes: r.likes || [],
+            userLiked: false,
+          })),
+        }));
 
-      const upvotes = (data.votes || []).filter(
-        (v: any) => v.voteType === "up"
-      ).length;
-      const downvotes = (data.votes || []).filter(
-        (v: any) => v.voteType === "down"
-      ).length;
+        const upvotes = (data.votes || []).filter(
+          (v: any) => v.voteType === "up"
+        ).length;
+        const downvotes = (data.votes || []).filter(
+          (v: any) => v.voteType === "down"
+        ).length;
 
-      const mappedIdiom: Idiom = {
-        _id: data._id || "",
-        title: data.title || "",
-        meaning: data.meaning || "",
-        example: data.example || "",
-        explanation: data.explanation || "",
-        etymology: data.etymology || "",
-        category: data.category || "",
-        difficulty: data.difficulty || "",
-        votes: upvotes,
-        downvotes: downvotes,
-        userVote: null,
-        author: {
-          id: data.author?._id || "",
-          username: data.author?.username || "Unknown",
-        },
-        comments,
-        createdAt: data.createdAt || new Date().toISOString(),
-        tags: data.tags || [],
-      };
+        const mappedIdiom: Idiom = {
+          _id: data._id || "",
+          title: data.title || "",
+          meaning: data.meaning || "",
+          example: data.example || "",
+          explanation: data.explanation || "",
+          etymology: data.etymology || "",
+          category: data.category || "",
+          difficulty: data.difficulty || "",
+          votes: upvotes,
+          downvotes: downvotes,
+          userVote: null,
+          author: {
+            id: data.author?._id || "",
+            username: data.author?.username || "Unknown",
+          },
+          comments,
+          createdAt: data.createdAt || new Date().toISOString(),
+          tags: data.tags || [],
+        };
 
-      setIdiom(mappedIdiom);
-    });
+        setIdiom(mappedIdiom);
+      });
   }, [id]);
 
   if (!idiom)

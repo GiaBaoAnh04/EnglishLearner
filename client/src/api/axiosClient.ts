@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:5000/api", // đổi theo URL backend
+  baseURL: "https://idiom-community.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
