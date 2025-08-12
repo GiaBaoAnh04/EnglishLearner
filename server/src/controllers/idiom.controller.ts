@@ -94,18 +94,6 @@ export const getAllIdioms = async (_req: Request, res: Response) => {
   }
 };
 
-// export const updateIdiom = async (req: Request, res: Response) => {
-//   try {
-//     const updated = await Idiom.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//     });
-//     if (!updated) return res.status(404).json({ message: "Idiom not found" });
-//     res.json(updated);
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to update idiom" });
-//   }
-// };
-
 export const updateIdiom = async (req: Request, res: Response) => {
   try {
     const allowedFieldKeys = [
@@ -178,59 +166,6 @@ export const deleteIdiom = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to delete idiom" });
   }
 };
-
-// Lấy idiom bằng ID
-// export const getIdiomById = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-
-//     if (!isValidObjectId(id)) {
-//       return res.status(400).json({ message: "Invalid ID format" });
-//     }
-
-//     const idiom = await Idiom.findById(id)
-//       .populate({
-//         path: "comments",
-//         populate: [
-//           {
-//             path: "user",
-//             select: "username",
-//           },
-//           {
-//             path: "replies.user",
-//             select: "username",
-//           },
-//         ],
-//       })
-//       .populate("author", "username email")
-//       .populate("votes.user", "username");
-
-//     if (!idiom) {
-//       return res.status(404).json({ message: "Idiom not found" });
-//     }
-
-//     // Tính số lượt like và dislike
-//     const upvotes = idiom.votes.filter(
-//       (vote: any) => vote.voteType === "up"
-//     ).length;
-//     const downvotes = idiom.votes.filter(
-//       (vote: any) => vote.voteType === "down"
-//     ).length;
-
-//     // Tạo response object bao gồm thông tin vote counts
-//     const response = {
-//       ...idiom.toObject(), // Chuyển mongoose document thành plain object
-//       upvotes,
-//       downvotes,
-//       voteCount: upvotes - downvotes, // Thêm tổng số vote (tùy chọn)
-//     };
-
-//     res.status(200).json(response);
-//   } catch (error) {
-//     console.error("Error getting idiom by ID:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
 
 export const getIdiomById = async (req: Request, res: Response) => {
   try {
@@ -490,7 +425,7 @@ export const getUserIdioms = async (req: AuthRequest, res: Response) => {
 
     // Format data cho frontend
     const formattedIdioms = idioms.map((idiom) => ({
-      id: idiom._id,
+      _id: idiom._id,
       title: idiom.title,
       meaning: idiom.meaning,
       example: idiom.example,

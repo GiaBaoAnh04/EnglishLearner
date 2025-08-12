@@ -4,62 +4,6 @@ import User from "../models/user.model";
 import Idiom from "../models/idiom.model";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
-// export const getProfile = async (req: AuthRequest, res: Response) => {
-//   try {
-//     const userId = req.user._id;
-
-//     // Lấy thông tin user và đếm số idiom đã tạo
-//     const user = await User.findById(userId);
-//     const totalIdioms = await Idiom.countDocuments({ createdBy: userId });
-
-//     if (!user) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
-
-//     // Đếm tổng số likes từ các idiom của user
-//     const userIdioms = await Idiom.find({ createdBy: userId });
-//     const totalLikes = userIdioms.reduce(
-//       (sum, idiom) => sum + (idiom.votes?.length || 0),
-//       0
-//     );
-
-//     res.json({
-//       success: true,
-//       message: "Profile retrieved successfully",
-//       data: {
-//         user: {
-//           _id: user._id.toString(),
-//           email: user.email,
-//           username: user.username,
-//           fullName: user.fullName,
-//           avatar: user.avatar || null,
-//           bio: user.bio || null,
-//           role: user.role,
-//           level: user.level,
-//           streak: user.streak,
-//           totalPoints: user.totalPoints,
-//           lastLoginAt: user.lastLoginAt,
-//           isActive: user.isActive,
-//           emailVerified: user.emailVerified,
-//           createdAt: user.createdAt,
-//           totalIdioms,
-//           totalLikes,
-//           favouriteIdioms: user.favouriteIdioms || [],
-//         },
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Get profile error:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Server error getting profile",
-//     });
-//   }
-// };
-
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user._id;
@@ -277,7 +221,7 @@ export const getFavouriteIdioms = async (req: AuthRequest, res: Response) => {
 
     // Format data để phù hợp với frontend
     const favouriteIdioms = user.favouriteIdioms.map((idiom: any) => ({
-      id: idiom._id,
+      _id: idiom._id,
       title: idiom.title,
       meaning: idiom.meaning,
       example: idiom.example,
