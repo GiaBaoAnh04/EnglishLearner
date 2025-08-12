@@ -16,8 +16,11 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // React dev server
-    credentials: true, // nếu bạn dùng cookie/session
+    origin: [
+      "https://english-learner-8j293c9vc-giabaoanhs-projects.vercel.app",
+      "http://localhost:3000", // cho development
+    ],
+    credentials: true,
   })
 );
 
