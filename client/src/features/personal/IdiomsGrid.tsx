@@ -1,4 +1,3 @@
-import React from "react";
 import { IdiomCard } from "../home/EdiomCard";
 import { Idiom } from "../../types/idiom";
 
@@ -32,8 +31,8 @@ export default function IdiomsGrid({
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {idioms.map((idiom) => (
-        <div key={idiom._id} className="relative">
+      {idioms.map((idiom, index) => (
+        <div key={index} className="relative">
           <IdiomCard
             idiom={idiom}
             className="hover:shadow-lg transition-shadow"

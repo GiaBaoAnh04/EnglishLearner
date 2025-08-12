@@ -16,7 +16,6 @@ export const IdiomCard = ({
   onClick,
 }: IdiomCardProps) => {
   const navigate = useNavigate();
-
   const handleClick = () => {
     onClick ? onClick(idiom._id) : navigate(`/idiom-detail/${idiom._id}`);
   };

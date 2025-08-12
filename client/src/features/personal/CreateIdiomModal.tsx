@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { NewIdiomData } from "../../types/idiom";
+import { aiApi } from "../../api/aiApi";
 
 interface CreateIdiomModalProps {
   newIdiomData: NewIdiomData;
@@ -14,8 +15,45 @@ export default function CreateIdiomModal({
   handleCreateIdiom,
   setShowCreateModal,
 }: CreateIdiomModalProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState("");
+
   const onClose = () => {
     setShowCreateModal(false);
+  };
+
+  const handleManualChange =
+    (field: keyof NewIdiomData) =>
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      setNewIdiomData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+  const handleGenerate = async () => {
+    if (!newIdiomData.title.trim()) {
+      setGenerationError("Please enter a title before generating.");
+      return;
+    }
+
+    setIsGenerating(true);
+    setGenerationError("");
+
+    try {
+      const aiResult = await aiApi.generateIdiomData(newIdiomData.title);
+      console.log(aiResult, "aiResult");
+      setNewIdiomData((prev) => ({
+        ...prev,
+        ...aiResult, // Gộp dữ liệu AI trả về
+      }));
+    } catch (error) {
+      console.error(error);
+      setGenerationError("Failed to generate idiom data. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -24,23 +62,32 @@ export default function CreateIdiomModal({
         <h3 className="text-xl font-bold mb-4">Create New Idiom</h3>
 
         {/* Title Input */}
-        <input
-          type="text"
-          value={newIdiomData.title}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({ ...prev, title: e.target.value }))
-          }
-          placeholder="Title"
-          className="border rounded p-2 w-full mb-3"
-        />
+        <div className="flex gap-2 mb-3">
+          <input
+            type="text"
+            value={newIdiomData.title}
+            onChange={handleManualChange("title")}
+            placeholder="Enter idiom title"
+            className="border rounded p-2 flex-1"
+          />
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="px-4 py-2 bg-green-600 text-white rounded-md"
+          >
+            {isGenerating ? "Generating..." : "Generate"}
+          </button>
+        </div>
+
+        {generationError && (
+          <div className="text-red-500 text-sm mb-3">{generationError}</div>
+        )}
 
         {/* Category Input */}
         <input
           type="text"
           value={newIdiomData.category}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({ ...prev, category: e.target.value }))
-          }
+          onChange={handleManualChange("category")}
           placeholder="Category"
           className="border rounded p-2 w-full mb-3"
         />
@@ -48,60 +95,76 @@ export default function CreateIdiomModal({
         {/* Meaning Textarea */}
         <textarea
           value={newIdiomData.meaning}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({ ...prev, meaning: e.target.value }))
-          }
+          onChange={handleManualChange("meaning")}
           placeholder="Meaning"
           className="border rounded p-2 w-full mb-3"
+          rows={3}
         />
 
         {/* Example Textarea */}
         <textarea
           value={newIdiomData.example}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({ ...prev, example: e.target.value }))
-          }
-          placeholder="Example"
+          onChange={handleManualChange("example")}
+          placeholder="Example sentence"
           className="border rounded p-2 w-full mb-3"
+          rows={3}
         />
 
         {/* Explanation Textarea */}
         <textarea
           value={newIdiomData.explanation}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({
-              ...prev,
-              explanation: e.target.value,
-            }))
-          }
-          placeholder="Explanation"
+          onChange={handleManualChange("explanation")}
+          placeholder="Detailed explanation"
+          className="border rounded p-2 w-full mb-3"
+          rows={3}
+        />
+
+        {/* Etymology Input */}
+        <input
+          type="text"
+          value={newIdiomData.etymology}
+          onChange={handleManualChange("etymology")}
+          placeholder="Etymology (origin)"
           className="border rounded p-2 w-full mb-3"
         />
 
         {/* Difficulty Select */}
         <select
           value={newIdiomData.difficulty}
-          onChange={(e) =>
-            setNewIdiomData((prev) => ({ ...prev, difficulty: e.target.value }))
-          }
+          onChange={handleManualChange("difficulty")}
           className="border rounded p-2 w-full mb-3"
         >
+          <option value="">Select difficulty</option>
           <option value="Beginner">Beginner</option>
           <option value="Intermediate">Intermediate</option>
           <option value="Advanced">Advanced</option>
         </select>
 
+        {/* Tags Input */}
+        <input
+          type="text"
+          value={newIdiomData.tags?.join(", ") || ""}
+          onChange={(e) => {
+            setNewIdiomData((prev) => ({
+              ...prev,
+              tags: e.target.value.split(",").map((tag) => tag.trim()),
+            }));
+          }}
+          placeholder="Tags (comma separated)"
+          className="border rounded p-2 w-full mb-3"
+        />
+
         <div className="flex gap-3 mt-6">
           <button
             onClick={handleCreateIdiom}
-            // Update disabled condition to include the new 'category' field
             disabled={
               !newIdiomData.title ||
               !newIdiomData.category ||
               !newIdiomData.meaning ||
               !newIdiomData.example ||
               !newIdiomData.explanation ||
-              !newIdiomData.difficulty
+              !newIdiomData.difficulty ||
+              isGenerating
             }
             className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-gray-300"
           >

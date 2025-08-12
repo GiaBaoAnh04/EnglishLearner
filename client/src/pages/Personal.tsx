@@ -133,6 +133,7 @@ const PersonalPage = () => {
   };
 
   const currentIdioms = activeTab === "my-idioms" ? myIdioms : likedIdioms;
+  console.log(currentIdioms, "currentIdioms");
 
   const filteredIdioms = currentIdioms
     .filter(
