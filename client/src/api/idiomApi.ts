@@ -1,4 +1,3 @@
-// src/api/idiomApi.ts
 import axiosClient from "./axiosClient";
 
 export const idiomApi = {

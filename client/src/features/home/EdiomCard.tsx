@@ -1,4 +1,3 @@
-// components/IdiomCard.tsx
 import { Clock, MessageCircle, ThumbsUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getDifficultyColor, formatDate } from "../../utils/utils";

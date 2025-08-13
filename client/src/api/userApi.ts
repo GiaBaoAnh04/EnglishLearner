@@ -1,4 +1,3 @@
-// src/api/userApi.ts
 import axiosClient from "./axiosClient";
 
 export const userApi = {

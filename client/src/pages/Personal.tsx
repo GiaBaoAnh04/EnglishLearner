@@ -28,7 +28,7 @@ interface UserProfile {
 const PersonalPage = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const { user, updateUser } = useUser();
+  const { updateUser } = useUser();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [myIdioms, setMyIdioms] = useState<Idiom[]>([]);
   const [likedIdioms, setLikedIdioms] = useState<Idiom[]>([]);
@@ -91,8 +91,6 @@ const PersonalPage = () => {
     try {
       await userApi.updateProfile(editProfile, token);
 
-      // Lấy data từ response (thay vì dùng toàn bộ response)
-
       updateUser(editProfile);
       setUserProfile((prev) => (prev ? { ...prev, ...editProfile } : null));
       setIsEditing(false);
@@ -122,7 +120,7 @@ const PersonalPage = () => {
     } catch (error) {
       console.error("Error creating idiom:", error);
     }
-  }, [newIdiomData, token]); // Fix: Change 'newIdiom' to 'newIdiomData'
+  }, [newIdiomData, token]);
 
   const handleIdiomClick = (id: string) => {
     navigate(`/idiom-detail/${id}`);
@@ -154,7 +152,11 @@ const PersonalPage = () => {
 
   const tabs = [
     { id: "my-idioms", label: "My Idioms", count: myIdioms.length },
-    { id: "liked-idioms", label: "Liked Idioms", count: likedIdioms.length },
+    {
+      id: "liked-idioms",
+      label: "Favourite Idioms",
+      count: likedIdioms.length,
+    },
   ];
 
   if (!userProfile) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { difficulties } from "../dummy/dummyIdioms"; // vẫn có thể giữ difficulties mock
+import { difficulties } from "../dummy/dummyIdioms";
 import Header from "../features/home/Header";
 import { SearchBar } from "../component/search-bar/search-bar";
 import { SelectInput } from "../component/select-input/select-input";

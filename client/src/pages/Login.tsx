@@ -51,37 +51,8 @@ const Login = () => {
   const [email, setEmail] = useState(""); // đổi từ username -> email
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const { updateUser } = useUser();
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   // Lấy updateUser từ context
-
-  //   try {
-  //     const res = await authApi.login({ email, password } as LoginData);
-  //     if (res.data.success) {
-  //       const userData = res.data.data.user;
-
-  //       // 1. Lưu token và user vào localStorage
-  //       localStorage.setItem("token", res.data.data.token);
-  //       localStorage.setItem("user", JSON.stringify(userData));
-
-  //       // 2. Cập nhật state toàn cục bằng updateUser
-  //       // Đây là bước quan trọng để thông báo cho context biết rằng user đã thay đổi
-  //       updateUser(userData);
-
-  //       navigate("/");
-  //     } else {
-  //       setError(res.data.message || "Đăng nhập thất bại.");
-  //     }
-  //   } catch (err: any) {
-  //     setError(err.response?.data?.message || "Lỗi kết nối server.");
-  //   }
-  // };
-  // pages/Login.tsx
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -99,7 +70,7 @@ const Login = () => {
         updateUser(userData);
 
         // 3. Force reload trang hoặc trigger auth refresh
-        window.location.href = "/"; // Hoặc navigate("/") + window.location.reload()
+        window.location.href = "/";
       } else {
         setError(res.data.message || "Đăng nhập thất bại.");
       }

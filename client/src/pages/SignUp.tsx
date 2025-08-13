@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authApi, RegisterData } from "../api/authApi"; // import API
+import { authApi, RegisterData } from "../api/authApi";
 
 interface FloatingLabelInputProps {
   id: string;
